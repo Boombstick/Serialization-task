@@ -33,9 +33,9 @@ namespace SerializationTask
 
             var personWithChild = personFromJson.Where(x => x.Children.Length != 0).ToArray();
 
-
-            Console.WriteLine($"Persons count: {personFromJson.Count()}");
-            Console.WriteLine($"Persons credit card count: {personFromJson.Count()}");
+            var personCount = personFromJson.Count();
+            Console.WriteLine($"Persons count: {personCount}");
+            Console.WriteLine($"Persons credit card count: {personCount}");
             Console.WriteLine($"Average value of child age: {CalculateAverageChildAge(personWithChild)}");
 
         }
