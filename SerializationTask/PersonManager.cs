@@ -39,13 +39,13 @@ namespace SerializationTask
         public List<Person> PersonGenerate(int count)
         {
             List<Person> persons = new List<Person>(count);
-            while(id<count)
+            while (id < count)
             {
                 Person person = new Person
                 {
                     Id = id,
                     TransportId = Guid.NewGuid(),
-                    FirstName = NameFaker.FirstName(),
+                    Gender = Faker.EnumFaker.SelectFrom<Gender>(),
                     LastName = NameFaker.LastName(),
                     SequenceId = id,
                     CreditCardNumbers = GetCreditCardNumber(),
@@ -53,9 +53,9 @@ namespace SerializationTask
                     Phones = GetPhoneNumbers(),
                     BirthDate = ((DateTimeOffset)Faker.DateTimeFaker.DateTime(DateTime.Now.AddYears(-100), DateTime.Now.AddYears(-18))).ToUnixTimeSeconds(),
                     Salary = rand.Next(20000, 100000),
-                    IsMarred = Faker.BooleanFaker.Boolean(),
-                    Gender = Faker.EnumFaker.SelectFrom<Gender>(),
+                    IsMarred = Faker.BooleanFaker.Boolean()
                 };
+                person.FirstName = person.Gender == Gender.Male ? Faker.NameFaker.MaleFirstName() : Faker.NameFaker.FemaleFirstName();
                 id++;
                 person.Children = ChildrenGenerator(person.LastName, person.BirthDate);
                 person.Age = DateTimeOffset.FromUnixTimeSeconds(person.BirthDate).Year;
@@ -76,7 +76,7 @@ namespace SerializationTask
                         Id = id,
                         Gender = Faker.EnumFaker.SelectFrom<Gender>(),
                         LastName = parentLastName,
-                        BirthDate = ((DateTimeOffset)Faker.DateTimeFaker.DateTime(DateTimeOffset.FromUnixTimeSeconds(parentBirthDay).DateTime.AddYears(17), DateTime.Now)).ToUnixTimeSeconds(),
+                        BirthDate = ((DateTimeOffset)Faker.DateTimeFaker.DateTime(DateTimeOffset.FromUnixTimeSeconds(parentBirthDay).DateTime.AddYears(18), DateTime.Now)).ToUnixTimeSeconds(),
 
                     };
                     result[i].FirstName = result[i].Gender == Gender.Male ? Faker.NameFaker.MaleFirstName() : Faker.NameFaker.FemaleFirstName();

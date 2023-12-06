@@ -33,7 +33,7 @@ namespace SerializationTask
             Console.WriteLine($"Persons count: {personCount}");
             Console.WriteLine($"Persons credit card count: {personCount}");
             Console.WriteLine($"Average value of child age: {personManager.CalculateAverageChildAge(personWithChild)}");
-            Console.WriteLine(  );
+
 
         }
     }
