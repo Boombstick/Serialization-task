@@ -10,6 +10,7 @@ namespace SerializationTask
 {
     internal class PersonManager
     {
+        private const int maxNumberOfChildren = 3;
         private const int numberCreditCardSymbols = 16;
         private const int numberPhoneNumberSymbols = 16;
         private int currentYear = DateTime.Now.Year;
@@ -39,7 +40,7 @@ namespace SerializationTask
         public List<Person> PersonGenerate(int count)
         {
             List<Person> persons = new List<Person>(count);
-            while (id < count)
+            while (id <= count)
             {
                 Person person = new Person
                 {
@@ -49,7 +50,6 @@ namespace SerializationTask
                     LastName = NameFaker.LastName(),
                     SequenceId = id,
                     CreditCardNumbers = GetCreditCardNumber(),
-                    Age = rand.Next(18, 100),
                     Phones = GetPhoneNumbers(),
                     BirthDate = ((DateTimeOffset)Faker.DateTimeFaker.DateTime(DateTime.Now.AddYears(-100), DateTime.Now.AddYears(-18))).ToUnixTimeSeconds(),
                     Salary = rand.Next(20000, 100000),
@@ -57,8 +57,10 @@ namespace SerializationTask
                 };
                 person.FirstName = person.Gender == Gender.Male ? Faker.NameFaker.MaleFirstName() : Faker.NameFaker.FemaleFirstName();
                 id++;
-                person.Children = ChildrenGenerator(person.LastName, person.BirthDate);
-                person.Age = DateTimeOffset.FromUnixTimeSeconds(person.BirthDate).Year;
+                if (id <= count - maxNumberOfChildren) person.Children = ChildrenGenerator(person.LastName, person.BirthDate);
+                else person.Children = Array.Empty<Child>();
+
+                person.Age = currentYear - DateTimeOffset.FromUnixTimeSeconds(person.BirthDate).Year;
                 persons.Add(person);
             }
 
@@ -66,7 +68,7 @@ namespace SerializationTask
         }
         public Child[] ChildrenGenerator(string parentLastName, long parentBirthDay)
         {
-            var result = new Child[rand.Next(0, 3)];
+            var result = new Child[rand.Next(0, maxNumberOfChildren)];
             if (result.Length != 0)
             {
                 for (int i = 0; i < result.Length; i++)
